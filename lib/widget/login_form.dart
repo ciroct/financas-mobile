@@ -33,36 +33,18 @@ class LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          TextFormField(
-            controller: _usernameController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'E-mail',
-              prefixIcon: Icon(Icons.email, color: Colors.blue),
-            ),
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Informe seu e-mail';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Senha',
-              prefixIcon: Icon(Icons.lock, color: Colors.blue),
-            ),
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Informe sua senha';
-              }
-              return null;
-            },
-          ),
+          textFormField(
+              controller: _usernameController,
+              keyboardType: TextInputType.emailAddress,
+              label: 'E-mail',
+              icon: Icons.email,
+              message: 'Informe seu e-mail'),
+          textFormField(
+              controller: _passwordController,
+              obscure: true,
+              label: 'Senha',
+              icon: Icons.lock,
+              message: 'Informe sua senha'),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
@@ -71,20 +53,26 @@ class LoginFormState extends State<LoginForm> {
                   if (_formKey.currentState!.validate()) {
                     var username = _usernameController.text;
                     var password = _passwordController.text;
-                    final Webservice _webservice = Webservice();
+                    final Webservice webservice = Webservice();
                     try {
                       DialogBuilder(context)
                           .showLoadingIndicator('Autenticando usuário');
+
                       UsuarioAutenticado res =
-                          await _webservice.attemptLogIn(username, password);
+                          await webservice.attemptLogIn(username, password);
+
+                      if (!context.mounted) return;
+
                       DialogBuilder(context).hideOpenDialog();
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => HomeScreen(usuario: res)));
                     } catch (e) {
-                      displayDialog(context, "Ocorreu um erro",
-                          "Nenhum usuário foi encontrado com este login e senha");
+                      DialogBuilder(context).hideOpenDialog();
+                      displayDialog(context, 'Ocorreu um erro',
+                          "$e Nenhum usuário foi encontrado com este login e senha");
                     }
                   } else {
                     displayDialog(
@@ -94,6 +82,31 @@ class LoginFormState extends State<LoginForm> {
           ),
         ],
       ),
+    );
+  }
+
+  TextFormField textFormField(
+      {TextEditingController? controller,
+      TextInputType? keyboardType,
+      bool obscure = false,
+      String? label,
+      IconData? icon,
+      String? message}) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      obscureText: obscure,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.blue),
+      ),
+      // The validator receives the text that the user has entered.
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return message;
+        }
+        return null;
+      },
     );
   }
 }

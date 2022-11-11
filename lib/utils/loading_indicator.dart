@@ -17,28 +17,29 @@ class LoadingIndicator extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _getLoadingIndicator(),
-              _getHeading(context),
+              _getHeading(),
               _getText(displayedText)
             ]));
   }
 
   Padding _getLoadingIndicator() {
-    return Padding(
-        child: Container(
-            child: const CircularProgressIndicator(strokeWidth: 3),
-            width: 32,
-            height: 32),
-        padding: const EdgeInsets.only(bottom: 16));
+    return const Padding(
+        padding: EdgeInsets.only(bottom: 16),
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: CircularProgressIndicator(strokeWidth: 3),
+        ));
   }
 
-  Widget _getHeading(context) {
+  Widget _getHeading() {
     return const Padding(
+        padding: EdgeInsets.only(bottom: 4),
         child: Text(
           'Por favor, espere …',
           style: TextStyle(color: Colors.white, fontSize: 16),
           textAlign: TextAlign.center,
-        ),
-        padding: EdgeInsets.only(bottom: 4));
+        ));
   }
 
   Text _getText(String displayedText) {

@@ -1,6 +1,6 @@
 class UsuarioAutenticado {
   String nome;
-  Set<int> perfis;
+  Set<String> perfis;
   String token;
   int contaId;
 
@@ -11,10 +11,10 @@ class UsuarioAutenticado {
       required this.contaId});
 
   factory UsuarioAutenticado.fromJson(Map<String, dynamic> json) {
-    Set<int> _perfis = {...json['perfis']};
+    Set<String> perfis = {...json['profile']};
     return UsuarioAutenticado(
-        nome: json['nome'],
-        perfis: _perfis,
+        nome: json['username'],
+        perfis: perfis,
         token: json['token'],
         contaId: json['contaId']);
   }

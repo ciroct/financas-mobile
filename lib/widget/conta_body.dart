@@ -13,12 +13,10 @@ class ContaBody extends StatefulWidget {
   const ContaBody({Key? key, required this.usuario}) : super(key: key);
 
   @override
-  _ContaBodyState createState() => _ContaBodyState();
+  ContaBodyState createState() => ContaBodyState();
 }
 
-class _ContaBodyState extends State<ContaBody> {
-  late Conta conta;
-
+class ContaBodyState extends State<ContaBody> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Conta>(
@@ -48,7 +46,7 @@ class _ContaBodyState extends State<ContaBody> {
                       Padding(
                         padding: EdgeInsets.only(left: 8.0, right: 8.0),
                         child: Text(
-                          'Ops! Sua conta não foi encotrada.',
+                          'Ops! Sua conta não foi encontrada.',
                           style: TextStyle(fontSize: 16),
                         ),
                       ),

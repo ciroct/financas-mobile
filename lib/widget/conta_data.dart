@@ -17,25 +17,25 @@ class ContaData extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
           child: Text(
-            "Id da conta: ${conta.id}",
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
-          child: Text(
             "Agência: ${conta.agencia}",
+            style: const TextStyle(fontSize: 20.0),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
           child: Text(
             "Numero: ${conta.numero}",
+            style: const TextStyle(fontSize: 20.0),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 10.0),
           child: Text(
             "Saldo: ${currencyFormat.format(conta.saldo)}",
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30.0,
+                color: Colors.blue),
           ),
         ),
       ],

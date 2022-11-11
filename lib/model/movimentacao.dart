@@ -31,7 +31,7 @@ class Movimentacao {
   static Resource<List<Movimentacao>> get(int contaId) {
     return Resource(
         url: Constants.restWebServiceURL,
-        path: '${Constants.movimentacoesPath}$contaId',
+        path: '${Constants.movimentacoesPath}/$contaId',
         parse: (response) {
           Iterable list = json.decode(utf8.decode(response.bodyBytes));
           return list.map((model) => Movimentacao.fromJson(model)).toList();

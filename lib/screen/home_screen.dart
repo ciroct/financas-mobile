@@ -1,21 +1,23 @@
 import 'package:financas/screen/login_screen.dart';
+import 'package:financas/widget/conta_body.dart';
+import 'package:financas/widget/movimentacoes_body.dart';
 
 import '/model/usuario_autenticado.dart';
 
-import '/utils/constants.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'conta_screen.dart';
-import 'movimentacoes_screen.dart';
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final UsuarioAutenticado usuario;
+  const HomeScreen({Key? key, required this.usuario}) : super(key: key);
 
-  HomeScreen({Key? key, required this.usuario}) : super(key: key);
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-  final String appTitle = "Finanças";
+class _HomeScreenState extends State<HomeScreen> {
+  final String appTitle = 'Finanças';
   final navigatorKey = GlobalKey<NavigatorState>();
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,53 +25,81 @@ class HomeScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       title: appTitle,
-      routes: {
-        ContaScreen.routeName: (context) => ContaScreen(usuario: usuario),
-        MovimentacoesScreen.routeName: (context) =>
-            MovimentacoesScreen(usuario: usuario),
-      },
       home: Scaffold(
-          appBar: AppBar(
-            title: Text(appTitle),
-            actions: [
-              PopupMenuButton<String>(
-                  onSelected: (choice) => choiceAction(choice, context),
-                  itemBuilder: (context) {
-                    return Constants.choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                          value: choice, child: Text(choice));
-                    }).toList();
-                  })
-            ],
-          ),
-          body: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset(
-                'images/financas_logo.jpeg',
-              ),
-            ],
-          ))),
+        appBar: AppBar(
+          title: Text('$appTitle - ${widget.usuario.nome}'),
+          actions: [_logoutIcon()],
+        ),
+        body: _choiceAction(currentPageIndex, context),
+        //body: IndexedStack(
+        //  index: currrentPageIndex,
+        //  children: [_choiceAction(currrentPageIndex, context)],
+        //),
+        bottomNavigationBar: _barraDeNavegacaoInferior(),
+      ),
     );
   }
 
-  void choiceAction(String choice, BuildContext context) {
-    if (choice == Constants.contaOption) {
-      navigatorKey.currentState!.pushNamed(ContaScreen.routeName);
-    } else if (choice == Constants.movimentacoesOption) {
-      navigatorKey.currentState!.pushNamed(MovimentacoesScreen.routeName);
-    } else if (choice == Constants.logoutOption) {
-      NavigatorState navigatorState = Navigator.of(context);
-      while (navigatorState.canPop()) {
-        navigatorState.pop();
-      }
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) {
-          return const LoginScreen();
-        }),
-      );
+  IconButton _logoutIcon() {
+    return IconButton(
+      onPressed: _logout,
+      icon: const Icon(Icons.logout),
+      tooltip: 'Sair',
+    );
+  }
+
+  Widget _choiceAction(int choice, BuildContext context) {
+    if (choice == 1) {
+      return ContaBody(usuario: widget.usuario);
+    } else if (choice == 2) {
+      return MovimentacoesBody(usuario: widget.usuario);
     }
+    return _homeBody();
+  }
+
+  Center _homeBody() {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('images/financas_logo.jpeg'),
+      ],
+    ));
+  }
+
+  BottomNavigationBar _barraDeNavegacaoInferior() {
+    return BottomNavigationBar(
+        currentIndex: currentPageIndex,
+        backgroundColor: Colors.blue,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        onTap: (index) => setState(() => currentPageIndex = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'Conta',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.balance),
+            label: 'Movimentações',
+          ),
+        ]);
+  }
+
+  void _logout() {
+    NavigatorState navigatorState = Navigator.of(context);
+    while (navigatorState.canPop()) {
+      navigatorState.pop();
+    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) {
+        return const LoginScreen();
+      }),
+    );
   }
 }

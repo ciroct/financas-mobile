@@ -10,7 +10,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Log In no Financas"),
+          title: const Text('Login no Financas'),
         ),
         body: Center(
             child: Column(

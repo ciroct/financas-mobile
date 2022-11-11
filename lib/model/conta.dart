@@ -26,7 +26,7 @@ class Conta {
   static Resource<Conta> get(int contaId) {
     return Resource(
         url: Constants.restWebServiceURL,
-        path: '${Constants.contaPath}$contaId',
+        path: '${Constants.contaPath}/$contaId',
         parse: (response) {
           return Conta.fromJson(jsonDecode(response.body));
         });
